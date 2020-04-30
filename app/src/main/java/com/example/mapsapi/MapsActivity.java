@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements LocationListener {
-    private GoogleMap mGoogleMap;
+    private GoogleMap mMap;
     private Button btnDeteksi;
     private ProgressBar pbLoad;
     private double mLatitude = 0;
@@ -59,7 +59,7 @@ public class MapsActivity extends AppCompatActivity implements LocationListener 
         fragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                mGoogleMap = googleMap;
+                mMap = googleMap;
                 initMap();
             }
         });
@@ -67,26 +67,26 @@ public class MapsActivity extends AppCompatActivity implements LocationListener 
         btnDeteksi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String sb = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + "location=" + mLatitude + "," + mLongitude +
+                String URLAPI = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" + "location=" + mLatitude + "," + mLongitude +
                         "&radius=5000" +
                         "&types=" + key +
                         "&sensor=true" +
                         "&key=" + getResources().getString(R.string.api_key_web);
-                onCari();
-                new PlacesTask().execute(sb);
+                onLoad();
+                new PlacesTask().execute(URLAPI);
             }
         });
     }
 
     private void initMap() {
-        onCari();
+        onLoad();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 115);
             return;
         }
 
-        if (mGoogleMap != null) {
-            mGoogleMap.setMyLocationEnabled(true);
+        if (mMap != null) {
+            mMap.setMyLocationEnabled(true);
 
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             Criteria criteria = new Criteria();
@@ -106,9 +106,9 @@ public class MapsActivity extends AppCompatActivity implements LocationListener 
         mLongitude = location.getLongitude();
         LatLng latLng = new LatLng(mLatitude, mLongitude);
 
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(12));
-        onAfterCari();
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+        onAfterLoad();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class MapsActivity extends AppCompatActivity implements LocationListener 
             try {
                 data = downloadUrl(url[0]);
             } catch (Exception e) {
-                onAfterCari();
+                onAfterLoad();
                 e.printStackTrace();
             }
             return data;
@@ -185,7 +185,7 @@ public class MapsActivity extends AppCompatActivity implements LocationListener 
                 jObject = new JSONObject(jsonData[0]);
                 places = parserPlace.parse(jObject);
             } catch (Exception e) {
-                onAfterCari();
+                onAfterLoad();
                 e.printStackTrace();
             }
             return places;
@@ -194,7 +194,7 @@ public class MapsActivity extends AppCompatActivity implements LocationListener 
         @Override
         protected void onPostExecute(List<HashMap<String, String>> list) {
             // clear map sebelumnya
-            mGoogleMap.clear();
+            mMap.clear();
 
             for (int i = 0; i < list.size(); i++) {
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -211,9 +211,9 @@ public class MapsActivity extends AppCompatActivity implements LocationListener 
                 markerOptions.position(latLng);
                 markerOptions.title(nama + " : " + namaJln);
 
-                mGoogleMap.addMarker(markerOptions);
+                mMap.addMarker(markerOptions);
             }
-            onAfterCari();
+            onAfterLoad();
         }
     }
 
@@ -236,12 +236,12 @@ public class MapsActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
-    private void onCari() {
+    private void onLoad() {
         pbLoad.setVisibility(View.VISIBLE);
         btnDeteksi.setVisibility(View.GONE);
     }
 
-    private void onAfterCari() {
+    private void onAfterLoad() {
         pbLoad.setVisibility(View.GONE);
         btnDeteksi.setVisibility(View.VISIBLE);
     }
