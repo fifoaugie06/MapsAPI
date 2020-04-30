@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.mapsapi.adapter.CustomHomeAdapter;
 import com.example.mapsapi.model.dataHome;

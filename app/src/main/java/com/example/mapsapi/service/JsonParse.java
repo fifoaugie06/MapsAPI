@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class JsonParse {
-    public List<HashMap<String, String>> parse(JSONObject jsonObject){
+    public List<HashMap<String, String>> parse(JSONObject jsonObject) {
         JSONArray jsonArray = null;
         try {
             jsonArray = jsonObject.getJSONArray("results");
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return getPlaces(jsonArray);
@@ -43,12 +43,10 @@ public class JsonParse {
         String longitude = "";
 
         try {
-            // extract nama
             if (!jsonObject.isNull("name")) {
                 placeName = jsonObject.getString("name");
             }
 
-            // extract nama jalan
             if (!jsonObject.isNull("vicinity")) {
                 vicinity = jsonObject.getString("vicinity");
             }
