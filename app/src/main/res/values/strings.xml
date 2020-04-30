@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MapsAPI</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="ATM">ATM\nTerdekat</string>
+    <string name="api_key_web">AIzaSyCEKcZs23v4siNoXAWTDxJar8ySMB-4bTc</string>
+
+</resources>
